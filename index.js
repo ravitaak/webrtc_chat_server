@@ -75,8 +75,9 @@ IO.on("connection", (socket) => {
     socket.on('leave-room', (data) => {
         rooms.delete(data.userId);
         console.log(data.userId, "left", data.roomId);
-        let userId = data.userId;
+        console.log("After Left:", rooms);
+        let userIdd = data.userId;
         let roomId = data.roomId;
-        socket.broadcast.to(roomId).emit('user-disconnected', { userId: userId });
+        socket.broadcast.to(roomId).emit('user-disconnected', { userId: userIdd });
     });
 });
