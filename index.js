@@ -68,6 +68,7 @@ IO.on("connection", (socket) => {
     });
 
     socket.on('disconnect', () => {
+        rooms.delete(socket.user);
         console.log(socket.user, "Disconnected");
     });
 
