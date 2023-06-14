@@ -1,7 +1,14 @@
-
 const express = require('express');
 const app = express();
+const http = require('http').createServer(app);
+
 let port = 3000;
+let IO = require("socket.io")(http, {
+    cors: {
+        origin: "*",
+        methods: ["GET", "POST"],
+    },
+});
 
 var rooms = new Set();
 
@@ -9,13 +16,7 @@ function getRooms() {
     return Array.from(rooms);
 }
 
-
-
-
-
-
 var allRooms = []
-
 
 app.get("/", (req, res) => {
     res.send("working...");
@@ -59,16 +60,9 @@ app.post("/join-room", (req, res) => {
 });
 
 
-app.listen(port);
 
 
 
-let IO = require("socket.io")(port, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"],
-    },
-});
 
 IO.use((socket, next) => {
     if (socket.handshake.query) {
@@ -138,4 +132,9 @@ IO.on("connection", (socket) => {
         let roomId = data.roomId;
         socket.broadcast.to(roomId).emit('user-disconnected', { userId: userIdd });
     });
+});
+
+
+http.listen(port, () => {
+    console.log("Listening on port", port);
 });
