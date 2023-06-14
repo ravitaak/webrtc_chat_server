@@ -1,6 +1,7 @@
 const express = require('express');
 const app = express();
 const http = require('http').createServer(app);
+const bodyParser = require("body-parser")
 
 let port = 3000;
 let IO = require("socket.io")(http, {
@@ -21,7 +22,10 @@ var allRooms = []
 app.get("/", (req, res) => {
     res.send("working...");
 });
-
+app.use(bodyParser.urlencoded({
+    extended: true
+}));
+app.use(bodyParser.json());
 
 app.post("/create-room", (req, res) => {
     let roomId = req.body.roomId;
@@ -39,6 +43,7 @@ app.post("/create-room", (req, res) => {
         host: host,
     }
     allRooms.push(room);
+    console.log(allRooms);
     res.send("Room created");
 });
 
