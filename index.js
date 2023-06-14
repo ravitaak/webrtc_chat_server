@@ -1,3 +1,6 @@
+
+const express = require('express');
+const app = express();
 let port = 3000;
 
 var rooms = new Set();
@@ -5,6 +8,61 @@ var rooms = new Set();
 function getRooms() {
     return Array.from(rooms);
 }
+
+
+
+
+
+
+var allRooms = []
+
+
+app.get("/", (req, res) => {
+    res.send("working...");
+});
+
+
+app.post("/create-room", (req, res) => {
+    let roomId = req.body.roomId;
+    let password = req.body.password;
+    let host = req.body.userId;
+
+    if (allRooms.includes(roomId)) {
+        res.send("Room already exists");
+        return;
+    }
+
+    let room = {
+        roomId: roomId,
+        password: password,
+        host: host,
+    }
+    allRooms.push(room);
+    res.send("Room created");
+});
+
+
+app.post("/join-room", (req, res) => {
+    let roomId = req.body.roomId;
+    let password = req.body.password;
+
+    //check room exists
+    if (!allRooms.includes(roomId)) {
+        res.send("Room does not exist");
+        return;
+    }
+    if (allRooms[roomId].password != password) {
+        res.send("Incorrect password");
+        return;
+    }
+    res.send("Room joined");
+});
+
+
+app.listen(port);
+
+
+
 let IO = require("socket.io")(port, {
     cors: {
         origin: "*",
