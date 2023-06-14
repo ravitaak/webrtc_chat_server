@@ -17,7 +17,7 @@ function getRooms() {
     return Array.from(rooms);
 }
 
-var allRooms = []
+var allRooms = new Map();
 
 app.get("/", (req, res) => {
     res.send("working...");
@@ -32,7 +32,9 @@ app.post("/create-room", (req, res) => {
     let password = req.body.password;
     let host = req.body.userId;
 
-    if (allRooms.includes(roomId)) {
+
+
+    if (allRooms.has(roomId)) {
         res.send("Room already exists");
         return;
     }
@@ -42,7 +44,7 @@ app.post("/create-room", (req, res) => {
         password: password,
         host: host,
     }
-    allRooms.push(room);
+    allRooms.set(roomId, room);
     console.log(allRooms);
     res.send("Room created");
 });
@@ -53,14 +55,15 @@ app.post("/join-room", (req, res) => {
     let password = req.body.password;
 
     //check room exists
-    if (!allRooms.includes(roomId)) {
+    if (!allRooms.has(roomId)) {
         res.send("Room does not exist");
         return;
     }
-    if (allRooms[roomId].password != password) {
+    if (allRooms.get(roomId).password != password) {
         res.send("Incorrect password");
         return;
     }
+    console.log("Room Joined");
     res.send("Room joined");
 });
 
