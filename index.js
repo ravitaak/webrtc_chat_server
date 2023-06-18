@@ -10,7 +10,7 @@ let IO = require("socket.io")(http, {
         methods: ["GET", "POST"],
     },
 });
-
+// /TODO: Add a route to serve the static files from "public" folder
 var rooms = new Set();
 
 function getRooms() {
